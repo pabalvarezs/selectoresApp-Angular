@@ -17,8 +17,8 @@ export class SelectorPageComponent implements OnInit {
                 private paisesServices : PaisesServiceService) { }
   
   miFormulario : FormGroup = this.fb.group({
-    region  : ['',Validators.required],
-    pais    : ['',Validators.required],
+    region      : ['',Validators.required],
+    pais        : ['',Validators.required],
     frontera    : ['',Validators.required],
   })
 
@@ -28,6 +28,10 @@ export class SelectorPageComponent implements OnInit {
   paises    : PaisSmall[]   = [];
   fronteras : string[]      = [];
 
+  // UI
+  cargando : boolean = false;
+
+
   ngOnInit(): void {
     this.regiones = this.paisesServices.regiones;
 
@@ -35,30 +39,33 @@ export class SelectorPageComponent implements OnInit {
 
     this.miFormulario.get('region')?.valueChanges
       .pipe(
-        switchMap( region => this.paisesServices.getPaisesPorRegion(region)),
         tap((_)=>{
           this.miFormulario.get('pais')?.reset('');
-        })
+          this.cargando = true;
+        }),
+        switchMap( region => this.paisesServices.getPaisesPorRegion(region)),
       )
       .subscribe( paises => {
         this.paises = paises;
+        this.cargando = false;
+
       })
 
     //cuando cambia el pais
 
     this.miFormulario.get("pais")?.valueChanges
       .pipe(
-        switchMap( codigo => this.paisesServices.getPaisPorCodigo(codigo)  ),
         tap( () => {
-          // this.fronteras = [];
+          this.fronteras = [];
           this.miFormulario.get('frontera')?.reset('');
-        })
+          this.cargando = true;
+
+        }),
+        switchMap( codigo => this.paisesServices.getPaisPorCodigo(codigo)  ),
       )
       .subscribe( pais => {
-
         this.fronteras = pais?.borders || [];
-
-        
+        this.cargando = false;
       })
   }
 
