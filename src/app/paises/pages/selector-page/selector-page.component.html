@@ -1,19 +1,40 @@
 <h1>Selectores Anidados</h1>
 <hr>
 <form [formGroup]="miFormulario" (ngSubmit)="guardar()">
+
+    <!-- REGION -->
+
     <div class="row mb-3">
         <div class="col">
             <label class="form-label">Continente: </label>
             <select     class="form-control"
                         formControlName="region">
-                <option value="">Seleccione Continente</option>
+                <option value="">---Seleccione Continente---</option>
                 <option *ngFor="let region of regiones"
                         [value]="region | lowercase">
                     {{ region | titlecase}}
                 </option>
             </select>
         </div>
-    </div>
+    </div> 
+
+    <!-- PAIS -->
+    <div class="row mb-3">
+        <div class="col">
+            <label class="form-label">País: </label>
+            <select     class="form-control"
+                        formControlName="pais">
+                <option value="">---Seleccione el País---</option>
+                <option *ngFor="let pais of paises"
+                        [value]="pais.alpha3Code">
+                    {{ pais.name | titlecase}}
+                </option>
+            </select>
+        </div>
+    </div> 
+
+    <!-- BOTON -->
+
     <div class="row">
         <div class="col">
             <button class="btn btn-primary float-end"
@@ -22,6 +43,7 @@
             </button>
         </div>
     </div>
+
 </form>
 <br>
 <h3>Formulario: </h3>
