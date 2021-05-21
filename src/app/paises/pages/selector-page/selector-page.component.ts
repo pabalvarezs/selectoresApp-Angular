@@ -26,7 +26,8 @@ export class SelectorPageComponent implements OnInit {
 
   regiones  : string[]      = [];
   paises    : PaisSmall[]   = [];
-  fronteras : string[]      = [];
+  // fronteras : string[]      = [];
+  fronteras : PaisSmall[]      = [];
 
   // UI
   cargando : boolean = false;
@@ -61,10 +62,12 @@ export class SelectorPageComponent implements OnInit {
           this.cargando = true;
 
         }),
-        switchMap( codigo => this.paisesServices.getPaisPorCodigo(codigo)  ),
+        switchMap( codigo => this.paisesServices.getPaisPorCodigo( codigo )  ),
+        switchMap( pais => this.paisesServices.getPaisPorCodigos( pais?.borders! )  ),
       )
-      .subscribe( pais => {
-        this.fronteras = pais?.borders || [];
+      .subscribe( paises => {
+        // this.fronteras = pais?.borders || [];
+        this.fronteras = paises;
         this.cargando = false;
       })
   }
